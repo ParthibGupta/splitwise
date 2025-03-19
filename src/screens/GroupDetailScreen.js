@@ -68,8 +68,7 @@ const GroupDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    padding: 16,
+    padding: 16
   },
   groupContainer: {
     marginBottom: 16,

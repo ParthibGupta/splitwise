@@ -60,7 +60,7 @@ const GroupsScreen = ({ navigation }) => {
               mode="outlined"
               style={styles.input}
             />
-            <Button mode="contained" onPress={handleCreateGroup} style={styles.button}>
+            <Button mode="outlined" onPress={handleCreateGroup} style={styles.button}>
               Create
             </Button>
             <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#121212',
   },
   fab: {
     position: 'absolute',
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#1f1f1f',
     padding: 20,
     margin: 20,
     borderRadius: 10,
@@ -102,20 +103,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 16,
     textAlign: 'center',
+    color: '#ffffff',
   },
   input: {
     width: '100%',
     marginBottom: 16,
+    backgroundColor: '#121212',
+    color: '#ffffff',
   },
   button: {
     marginTop: 16,
     width: '100%',
+    borderColor: '#bb86fc',
+    color: '#bb86fc',
   },
   closeButton: {
     marginTop: 16,
   },
   closeButtonText: {
-    color: 'blue',
+    color: '#bb86fc',
   },
 });
 
