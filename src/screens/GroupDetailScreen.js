@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { Text, TextInput, Button, List } from 'react-native-paper';
+import { View, StyleSheet, FlatList, Keyboard } from 'react-native';
+import { Text, TextInput, Button, List, Snackbar } from 'react-native-paper';
 import { sendInvite, fetchInvites, fetchGroupDetails } from '../../api/group';
 
 const GroupDetailScreen = ({ route }) => {
-  const { groupId } = route.params;
+  const { groupId, groupName } = route.params;
   const [email, setEmail] = useState('');
   const [invites, setInvites] = useState([]);
   const [group, setGroup] = useState(null);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarType, setSnackbarType] = useState('success'); // 'success' or 'error'
 
   useEffect(() => {
     const loadData = async () => {
@@ -20,10 +23,22 @@ const GroupDetailScreen = ({ route }) => {
   }, [groupId]);
 
   const handleSendInvite = async () => {
-    await sendInvite(email, groupId);
-    setEmail('');
-    const invitesData = await fetchInvites(groupId);
-    setInvites(invitesData);
+    Keyboard.dismiss();
+    const response = await sendInvite(email, groupId, groupName);
+    if(response.success) {
+      setEmail('');
+      setSnackbarMessage('Invite sent successfully!');
+      setSnackbarType('success');
+      setSnackbarVisible(true);
+      const invitesData = await fetchInvites(groupId);
+      setInvites(invitesData);
+    } 
+    
+    else{
+      setSnackbarMessage(response.message || 'Failed to send invite.');
+      setSnackbarType('error');
+      setSnackbarVisible(true);
+    }
   };
 
   return (
@@ -48,7 +63,7 @@ const GroupDetailScreen = ({ route }) => {
         </Button>
       </View>
       <View style={styles.invitesContainer}>
-        <Text style={styles.invitesTitle}>Pending Invites</Text>
+        <Text style={styles.invitesTitle}>Invited</Text>
         <FlatList
           data={invites}
           keyExtractor={(item) => item.id}
@@ -61,6 +76,16 @@ const GroupDetailScreen = ({ route }) => {
           )}
         />
       </View>
+
+      {/* Snackbar for Feedback */}
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={3000}
+        style={snackbarType === 'error' ? styles.snackbarError : styles.snackbarSuccess}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </View>
   );
 };
@@ -103,6 +128,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
+  },
+  snackbarSuccess: {
+    backgroundColor: 'green',
+  },
+  snackbarError: {
+    backgroundColor: 'red',
   },
 });
 

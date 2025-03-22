@@ -34,7 +34,7 @@ const GroupsScreen = ({ navigation }) => {
             title={item.name}
             description={`Members: ${item.members.length}`}
             left={(props) => <List.Icon {...props} icon="group" />}
-            onPress={() => navigation.navigate('GroupDetail', { groupId: item.id })}
+            onPress={() => navigation.navigate('GroupDetail', { groupId: item.id, groupName: item.name })}
           />
         )}
       />
