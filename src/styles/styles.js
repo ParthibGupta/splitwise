@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     input: {
       marginBottom: 16,
     },
-    
+
     loadingContainer: {
       flex: 1,
       justifyContent: 'center',
@@ -34,6 +34,11 @@ export const styles = StyleSheet.create({
       fontSize: 16,
       color: 'gray',
       marginBottom: 16,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 8,
     },
     button: {
       borderColor: '#bb86fc',

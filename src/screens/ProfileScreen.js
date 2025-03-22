@@ -3,7 +3,7 @@ import { View, Image } from 'react-native';
 import { Text, Button, ActivityIndicator } from 'react-native-paper';
 import { getUserDetails, updateUserProfilePhoto, signOut } from '../../api/user';
 import { styles } from '../styles/styles'
-
+import firebase from "../../firebase"
 
 const ProfileScreen = () => {
   const [user, setUser] = useState(null);
@@ -20,7 +20,6 @@ const ProfileScreen = () => {
 
   const handleLogout = async () => {
     await signOut();
-    console.log("Here")
     navigation.replace('Login'); // Navigate to the login screen after logout
   };
 
