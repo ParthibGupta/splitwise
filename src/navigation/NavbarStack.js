@@ -11,7 +11,6 @@ const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
   return (
     <Tab.Navigator
-
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           const icons = {
@@ -24,6 +23,7 @@ export default function BottomTabs() {
         tabBarActiveTintColor: CustomDarkTheme.colors.primary,
         tabBarInactiveTintColor: "gray",
         tabBarStyle: { backgroundColor: CustomDarkTheme.colors.background },
+        headerShown: false,
       })}
     >
       <Tab.Screen name="Home" component={HomeStack} />

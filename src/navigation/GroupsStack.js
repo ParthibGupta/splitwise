@@ -7,9 +7,17 @@ const Stack = createStackNavigator();
 
 export default function GroupsStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="GroupsScreen" component={GroupsScreen} />
-      <Stack.Screen name="GroupDetail" component={GroupDetailScreen} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="GroupsScreen"
+        component={GroupsScreen}
+        options={{ title: "Groups" }}
+      />
+      <Stack.Screen
+        name="GroupDetail"
+        component={GroupDetailScreen}
+        options={{ title: "Groups" }}
+      />
     </Stack.Navigator>
   );
 }
