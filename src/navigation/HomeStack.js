@@ -7,17 +7,16 @@ const Stack = createStackNavigator();
 
 export default function HomeStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen 
-        name="HomeScreen" 
-        component={HomeScreen} 
-        options={{ title: 'Home' }} 
+    <Stack.Navigator>
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ title: "Home" }}
       />
-      <Stack.Screen 
-        screenOptions={{ headerShown: false }}
-        name="AddExpenseScreen" 
-        component={AddExpenseScreen} 
-        options={{ title: 'Add Expense' , headerShown: false }} 
+      <Stack.Screen
+        name="AddExpenseScreen"
+        component={AddExpenseScreen}
+        options={{ title: "Add Expense" }}
       />
     </Stack.Navigator>
   );

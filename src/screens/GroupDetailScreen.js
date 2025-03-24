@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Keyboard } from 'react-native';
-import { Text, TextInput, Button, List, Snackbar } from 'react-native-paper';
-import { sendInvite, fetchInvites, fetchGroupDetails } from '../../api/group';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, FlatList, Keyboard } from "react-native";
+import { Text, TextInput, Button, List, Snackbar } from "react-native-paper";
+import { sendInvite, fetchInvites, fetchGroupDetails } from "../../api/group";
 
 const GroupDetailScreen = ({ route }) => {
   const { groupId, groupName } = route.params;
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [invites, setInvites] = useState([]);
   const [group, setGroup] = useState(null);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarType, setSnackbarType] = useState('success'); // 'success' or 'error'
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarType, setSnackbarType] = useState("success"); // 'success' or 'error'
 
   useEffect(() => {
     const loadData = async () => {
@@ -25,18 +25,16 @@ const GroupDetailScreen = ({ route }) => {
   const handleSendInvite = async () => {
     Keyboard.dismiss();
     const response = await sendInvite(email, groupId, groupName);
-    if(response.success) {
-      setEmail('');
-      setSnackbarMessage('Invite sent successfully!');
-      setSnackbarType('success');
+    if (response.success) {
+      setEmail("");
+      setSnackbarMessage("Invite sent successfully!");
+      setSnackbarType("success");
       setSnackbarVisible(true);
       const invitesData = await fetchInvites(groupId);
       setInvites(invitesData);
-    } 
-    
-    else{
-      setSnackbarMessage(response.message || 'Failed to send invite.');
-      setSnackbarType('error');
+    } else {
+      setSnackbarMessage(response.message || "Failed to send invite.");
+      setSnackbarType("error");
       setSnackbarVisible(true);
     }
   };
@@ -46,7 +44,9 @@ const GroupDetailScreen = ({ route }) => {
       {group && (
         <View style={styles.groupContainer}>
           <Text style={styles.groupTitle}>{group.name}</Text>
-          <Text style={styles.groupMembers}>Members: {group.members.length}</Text>
+          <Text style={styles.groupMembers}>
+            Members: {group.members.length}
+          </Text>
         </View>
       )}
       <View style={styles.inviteContainer}>
@@ -58,7 +58,11 @@ const GroupDetailScreen = ({ route }) => {
           mode="outlined"
           style={styles.input}
         />
-        <Button mode="contained" onPress={handleSendInvite} style={styles.button}>
+        <Button
+          mode="contained"
+          onPress={handleSendInvite}
+          style={styles.button}
+        >
           Send Invite
         </Button>
       </View>
@@ -82,7 +86,11 @@ const GroupDetailScreen = ({ route }) => {
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
         duration={3000}
-        style={snackbarType === 'error' ? styles.snackbarError : styles.snackbarSuccess}
+        style={
+          snackbarType === "error"
+            ? styles.snackbarError
+            : styles.snackbarSuccess
+        }
       >
         {snackbarMessage}
       </Snackbar>
@@ -93,26 +101,26 @@ const GroupDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16
+    padding: 16,
   },
   groupContainer: {
     marginBottom: 16,
   },
   groupTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   groupMembers: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
   },
   inviteContainer: {
     marginBottom: 16,
   },
   inviteTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   input: {
@@ -126,14 +134,14 @@ const styles = StyleSheet.create({
   },
   invitesTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   snackbarSuccess: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   snackbarError: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
 });
 

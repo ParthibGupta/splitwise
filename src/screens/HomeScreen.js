@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { View, TextInput, FlatList, Modal, TouchableOpacity } from 'react-native';
-import { Text, FAB, Card } from 'react-native-paper';
-import { useAuth } from '../components/AuthProvider';
-import { styles } from '../styles/styles';
-import GroupInvites from '../components/GroupInvites';
-import { fetchGroups } from '../../api/group';
-
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  TextInput,
+  FlatList,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
+import { Text, FAB, Card, Title } from "react-native-paper";
+import { useAuth } from "../components/AuthProvider";
+import { styles } from "../styles/styles";
+import GroupInvites from "../components/GroupInvites";
+import { fetchGroups } from "../../api/group";
 
 const HomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [groups, setGroups] = useState([]);
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const getGroups = async () => {
@@ -33,12 +38,21 @@ const HomeScreen = ({ navigation }) => {
 
   const handleGroupSelect = (groupId) => {
     setIsModalVisible(false);
-    navigation.navigate('AddExpenseScreen', { groupId });
+    navigation.navigate("AddExpenseScreen", { groupId });
+    navigation.setOptions({ title: "Add Expense" });
   };
 
   const renderGroup = ({ item }) => (
-    <Card style={{ marginBottom: 10, padding: 15, backgroundColor: '#333', borderRadius: 10 }} onPress={() => handleGroupSelect(item.id)}>
-      <Text style={{ color: 'white' }}>{item.name}</Text>
+    <Card
+      style={{
+        marginBottom: 10,
+        padding: 15,
+        backgroundColor: "#333",
+        borderRadius: 10,
+      }}
+      onPress={() => handleGroupSelect(item.id)}
+    >
+      <Text style={{ color: "white" }}>{item.name}</Text>
     </Card>
   );
 
@@ -59,13 +73,36 @@ const HomeScreen = ({ navigation }) => {
         transparent={true}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View style={{ backgroundColor: '#1c1c1c', padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20, maxHeight: '90%' }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#1c1c1c",
+              padding: 20,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              maxHeight: "90%",
+            }}
+          >
             <TextInput
-              placeholder="Search Groups" placeholderTextColor="#999"
+              placeholder="Search Groups"
+              placeholderTextColor="#999"
               value={searchQuery}
               onChangeText={handleSearch}
-              style={{ marginBottom: 15, padding: 10, borderWidth: 1, borderRadius: 10, backgroundColor: '#333', color: 'white', borderColor: '#555' }}
+              style={{
+                marginBottom: 15,
+                padding: 10,
+                borderWidth: 1,
+                borderRadius: 10,
+                backgroundColor: "#333",
+                color: "white",
+                borderColor: "#555",
+              }}
             />
             <FlatList
               data={filteredGroups}
@@ -73,7 +110,15 @@ const HomeScreen = ({ navigation }) => {
               renderItem={renderGroup}
             />
             <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-              <Text style={{ color: '#ff6666', textAlign: 'center', marginVertical: 10 }}>Close</Text>
+              <Text
+                style={{
+                  color: "#ff6666",
+                  textAlign: "center",
+                  marginVertical: 10,
+                }}
+              >
+                Close
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
