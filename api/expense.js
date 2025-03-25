@@ -1,9 +1,10 @@
 import { collection, addDoc, Timestamp, getDocs, doc, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
 import { auth, firestore } from '../firebase';
 
-export const addExpense = async (groupId, amount, splitAmong) => {
+export const addExpense = async (description, groupId, amount, splitAmong) => {
   try {
     const createdByName = auth.currentUser.displayName;
+    console.log("addition of expense");
     if (!createdByName) {
       throw new Error('User display name not found!');
     }
@@ -12,6 +13,7 @@ export const addExpense = async (groupId, amount, splitAmong) => {
     
     const expenseData = {
       amount,
+      description,
       splitAmong,
       createdBy: auth.currentUser.uid,
       createdByName,

@@ -1,4 +1,4 @@
-import { auth, firestore } from '../firebase';
+import { auth, firestore, functions, httpsCallable } from '../firebase';
 import { sendEmail } from '../services/emailService';
 
 import { collection, doc, setDoc, query, where, getDocs, Timestamp, addDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
@@ -126,3 +126,13 @@ export const addMember = async (groupId, memberId) => {
     console.error('Error adding member:', error);
   }
 }
+
+export const fetchGroupDetailsWithMembers = async (groupId) => {
+  try {
+    const fetchGroupDetailsFirebase = httpsCallable(functions, 'fetchGroupDetailsWithMembers'); 
+    const result = await fetchGroupDetailsFirebase({ groupId: groupId });
+    return result.data; 
+  } catch (error) {
+    console.error('Error fetching group details with members:', error);
+  }
+};
