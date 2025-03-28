@@ -61,3 +61,101 @@ exports.fetchGroupDetailsWithMembers = onCall({ region }, async (request) => {
     throw new HttpsError('internal', 'Error fetching group details.');
   }
 });
+
+exports.calculateGroupBalances = onCall({ region },async (data, context) => {
+    try {
+        const { groupId } = data;
+        if (!groupId) {
+            throw new HttpsError("invalid-argument", "groupId is required");
+        }
+
+        const expensesSnapshot = await admin.firestore()
+            .collection("groups")
+            .doc(groupId)
+            .collection("expenses")
+            .get();
+
+        if (expensesSnapshot.empty) {
+            return { message: "No expenses found", balances: {} };
+        }
+
+        let balances = {};
+
+        expensesSnapshot.forEach(doc => {
+            const expense = doc.data();
+            const totalAmount = parseFloat(expense.amount);
+            const payer = expense.createdBy;
+            const participants = expense.splitAmong;
+            const share = totalAmount / participants.length;
+
+            participants.forEach(userId => {
+                if (userId !== payer) {
+                    if (!balances[userId]) balances[userId] = {};
+                    if (!balances[userId][payer]) balances[userId][payer] = 0;
+                    balances[userId][payer] += share;
+                }
+            });
+        });
+
+        return { balances };
+    } catch (error) {
+        console.error("Error calculating balances:", error);
+        throw new HttpsError("internal", "Error calculating balances");
+    }
+});
+
+
+exports.getUserBalance = onCall({ region }, async (data, context) => {
+    try {
+        const userId = await getAuth().getUser();
+        if (!userId) {
+            throw new HttpsError("unauthenticated", "User must be authenticated");
+        }
+        
+        
+        const groupsSnapshot = await admin.firestore().collection("groups").get();
+        if (groupsSnapshot.empty) {
+            return { message: "No groups found", totalBalance: 0, groupBalances: [] };
+        }
+
+        let totalBalance = 0;
+        let groupBalances = [];
+
+        for (const groupDoc of groupsSnapshot.docs) {
+            const groupId = groupDoc.id;
+            const groupName = groupDoc.data().name;
+            let groupBalance = 0;
+
+            const expensesSnapshot = await admin.firestore()
+                .collection("groups")
+                .doc(groupId)
+                .collection("expenses")
+                .get();
+
+            expensesSnapshot.forEach(doc => {
+                const expense = doc.data();
+                const totalAmount = parseFloat(expense.amount);
+                const payer = expense.createdBy;
+                const participants = expense.splitAmong;
+                const share = totalAmount / participants.length;
+
+                if (participants.includes(userId) && userId !== payer) {
+                    groupBalance -= share;
+                }
+                if (payer === userId) {
+                    groupBalance += totalAmount - share;
+                }
+            });
+
+            if (groupBalance !== 0) {
+                groupBalances.push({ groupId, groupName, balance: groupBalance });
+                totalBalance += groupBalance;
+            }
+        }
+
+        return { totalBalance, groupBalances };
+    } catch (error) {
+        console.error("Error calculating user balance:", error);
+        throw new HttpsError("internal", "Error calculating user balance");
+    }
+});
